@@ -50,7 +50,3 @@ Lower thresholds usually create more candidate pixels. Higher thresholds usually
 - `dense`: dense CUDA pipeline using a direct 5x5 Gaussian blur.
 - `opt`: optimized CUDA pipeline using separable Gaussian blur and constant memory for masks.
 - `sparse`: optimized CUDA pipeline plus threshold mask, exclusive scan, scatter, and sparse hysteresis.
-
-## What to report
-
-Record total runtime, per-stage runtime, speedup over CPU, candidate pixel count for sparse mode, and output correctness difference.
