@@ -1,0 +1,683 @@
+CUDA Canny Full Experiment Log
+==========================================================================================
+Project directory: /home/compute/w.yuanji/Desktop/cuda_canny_project
+Result directory: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results
+Image directory: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images
+Repeat count: 10
+Start time: Sun Apr 26 17:25:19 2026
+
+
+# System Info
+==========================================================================================
+
+==========================================================================================
+COMMAND: hostname
+==========================================================================================
+r40a-02.engr.wustl.edu
+
+[Command exit code] 0
+[Wall time] 0.027 seconds
+
+==========================================================================================
+COMMAND: date
+==========================================================================================
+Sun Apr 26 17:25:19 CDT 2026
+
+[Command exit code] 0
+[Wall time] 0.011 seconds
+
+==========================================================================================
+COMMAND: which nvcc && nvcc --version
+==========================================================================================
+/usr/local/cuda/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Jun__6_02:18:23_PDT_2024
+Cuda compilation tools, release 12.5, V12.5.82
+Build cuda_12.5.r12.5/compiler.34385749_0
+
+[Command exit code] 0
+[Wall time] 0.012 seconds
+
+==========================================================================================
+COMMAND: which nvidia-smi && nvidia-smi
+==========================================================================================
+/usr/bin/nvidia-smi
+Sun Apr 26 17:25:19 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.65.06              Driver Version: 580.65.06      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 4000 Ada Gene...    Off |   00000000:02:00.0 Off |                  Off |
+| 30%   28C    P8             11W /  130W |       2MiB /  20475MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+[Command exit code] 0
+[Wall time] 0.261 seconds
+
+
+# Image Preparation
+==========================================================================================
+Downloaded image_720p from https://picsum.photos/seed/cuda_canny_720/1280/720
+ImageMagick not found, cannot convert downloaded image.
+Generated fallback synthetic PGM: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm
+Downloaded image_1080p from https://picsum.photos/seed/cuda_canny_1080/1920/1080
+ImageMagick not found, cannot convert downloaded image.
+Generated fallback synthetic PGM: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm
+Downloaded image_4k from https://picsum.photos/seed/cuda_canny_4k/3840/2160
+ImageMagick not found, cannot convert downloaded image.
+Generated fallback synthetic PGM: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm
+
+
+# Compilation
+==========================================================================================
+
+==========================================================================================
+COMMAND: make clean
+==========================================================================================
+rm -f canny *.o
+
+[Command exit code] 0
+[Wall time] 0.036 seconds
+
+==========================================================================================
+COMMAND: make
+==========================================================================================
+nvcc -O3 -std=c++17 -arch=sm_70 -lineinfo main.cu -o canny
+
+[Command exit code] 0
+[Wall time] 9.567 seconds
+
+
+# Experiments
+==========================================================================================
+
+
+##########################################################################################
+# Image: image_720p, size=1280x720
+##########################################################################################
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_cpu.pgm" --mode cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=cpu, low=50, high=100, hysteresis iterations=4
+CPU time: 59.9699 ms
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_cpu.pgm
+
+[Command exit code] 0
+[Wall time] 0.110 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_dense.pgm" --mode dense --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=dense, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.196269
+  Gaussian     : 0.0251328
+  Sobel        : 0.0197696
+  NMS          : 0.012304
+  Threshold    : 0.0074624
+  Hysteresis   : 0.0362464
+  D2H transfer : 0.37161
+  Total        : 0.675853
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_dense.pgm
+CPU reference time: 49.8146 ms
+Speedup vs CPU total: 73.7063x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 921600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.477 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_opt.pgm" --mode opt --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=opt, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.149222
+  Gaussian     : 0.0213472
+  Sobel        : 0.019168
+  NMS          : 0.0122688
+  Threshold    : 0.00768
+  Hysteresis   : 0.036912
+  D2H transfer : 0.869389
+  Total        : 1.1228
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_opt.pgm
+CPU reference time: 53.7425 ms
+Speedup vs CPU total: 47.8647x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 921600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.489 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse.pgm" --mode sparse --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=sparse, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.152822
+  Gaussian     : 0.0218464
+  Sobel        : 0.019456
+  NMS          : 0.0123904
+  Threshold    : 0.0084192
+  Scan         : 0.0369696
+  Scatter      : 0.0113536
+  Candidates   : 42851
+  Hysteresis   : 0.0279456
+  D2H transfer : 0.478032
+  Total        : 0.776707
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse.pgm
+CPU reference time: 55.6477 ms
+Speedup vs CPU total: 71.6457x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 921600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.432 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse_low_threshold.pgm" --mode sparse --low 20 --high 60 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=sparse, low=20, high=60, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.185814
+  Gaussian     : 0.022224
+  Sobel        : 0.019456
+  NMS          : 0.012288
+  Threshold    : 0.0090112
+  Scan         : 0.04024
+  Scatter      : 0.012736
+  Candidates   : 47079
+  Hysteresis   : 0.0346976
+  D2H transfer : 0.483658
+  Total        : 0.827936
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse_low_threshold.pgm
+CPU reference time: 49.0241 ms
+Speedup vs CPU total: 59.2124x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 921600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.409 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse_mid_threshold.pgm" --mode sparse --low 50 --high 100 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=sparse, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.197405
+  Gaussian     : 0.022976
+  Sobel        : 0.019456
+  NMS          : 0.0124992
+  Threshold    : 0.0090048
+  Scan         : 0.0392032
+  Scatter      : 0.0122208
+  Candidates   : 42851
+  Hysteresis   : 0.0359584
+  D2H transfer : 0.49464
+  Total        : 0.85113
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse_mid_threshold.pgm
+CPU reference time: 49.057 ms
+Speedup vs CPU total: 57.6375x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 921600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.414 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse_high_threshold.pgm" --mode sparse --low 80 --high 160 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_720p_1280x720.pgm (1280 x 720)
+Mode=sparse, low=80, high=160, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.207254
+  Gaussian     : 0.0235328
+  Sobel        : 0.019456
+  NMS          : 0.0124128
+  Threshold    : 0.0091936
+  Scan         : 0.0396704
+  Scatter      : 0.0146048
+  Candidates   : 40801
+  Hysteresis   : 0.0364832
+  D2H transfer : 0.517894
+  Total        : 0.888182
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_720p/image_720p_sparse_high_threshold.pgm
+CPU reference time: 49.8722 ms
+Speedup vs CPU total: 56.1508x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 921600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.421 seconds
+
+
+##########################################################################################
+# Image: image_1080p, size=1920x1080
+##########################################################################################
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_cpu.pgm" --mode cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=cpu, low=50, high=100, hysteresis iterations=4
+CPU time: 113.696 ms
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_cpu.pgm
+
+[Command exit code] 0
+[Wall time] 0.213 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_dense.pgm" --mode dense --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=dense, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.368339
+  Gaussian     : 0.0489024
+  Sobel        : 0.0538592
+  NMS          : 0.0254304
+  Threshold    : 0.0134816
+  Hysteresis   : 0.0671936
+  D2H transfer : 0.879309
+  Total        : 1.46839
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_dense.pgm
+CPU reference time: 109.993 ms
+Speedup vs CPU total: 74.9072x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 2073600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.546 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_opt.pgm" --mode opt --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=opt, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.420362
+  Gaussian     : 0.0358304
+  Sobel        : 0.0519936
+  NMS          : 0.0267264
+  Threshold    : 0.013456
+  Hysteresis   : 0.0677152
+  D2H transfer : 0.897146
+  Total        : 1.52535
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_opt.pgm
+CPU reference time: 109.671 ms
+Speedup vs CPU total: 71.8993x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 2073600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.521 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse.pgm" --mode sparse --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=sparse, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.40703
+  Gaussian     : 0.0405056
+  Sobel        : 0.0539584
+  NMS          : 0.0264192
+  Threshold    : 0.0161056
+  Scan         : 0.0469568
+  Scatter      : 0.0203456
+  Candidates   : 66379
+  Hysteresis   : 0.043264
+  D2H transfer : 1.24223
+  Total        : 1.90892
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse.pgm
+CPU reference time: 111.026 ms
+Speedup vs CPU total: 58.1617x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 2073600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.541 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse_low_threshold.pgm" --mode sparse --low 20 --high 60 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=sparse, low=20, high=60, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.402867
+  Gaussian     : 0.0389856
+  Sobel        : 0.0541632
+  NMS          : 0.0262112
+  Threshold    : 0.0162912
+  Scan         : 0.0471168
+  Scatter      : 0.0197696
+  Candidates   : 72082
+  Hysteresis   : 0.0446304
+  D2H transfer : 1.24155
+  Total        : 1.90337
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse_low_threshold.pgm
+CPU reference time: 109.762 ms
+Speedup vs CPU total: 57.6674x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 2073600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.508 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse_mid_threshold.pgm" --mode sparse --low 50 --high 100 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=sparse, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.369498
+  Gaussian     : 0.0389248
+  Sobel        : 0.0542176
+  NMS          : 0.0260544
+  Threshold    : 0.0162752
+  Scan         : 0.0479424
+  Scatter      : 0.0201376
+  Candidates   : 66379
+  Hysteresis   : 0.044112
+  D2H transfer : 1.28089
+  Total        : 1.90992
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse_mid_threshold.pgm
+CPU reference time: 109.897 ms
+Speedup vs CPU total: 57.5401x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 2073600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.573 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse_high_threshold.pgm" --mode sparse --low 80 --high 160 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_1080p_1920x1080.pgm (1920 x 1080)
+Mode=sparse, low=80, high=160, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.282931
+  Gaussian     : 0.0401024
+  Sobel        : 0.0533664
+  NMS          : 0.0260864
+  Threshold    : 0.0159104
+  Scan         : 0.0547712
+  Scatter      : 0.0190208
+  Candidates   : 63140
+  Hysteresis   : 0.0448864
+  D2H transfer : 1.21352
+  Total        : 1.76258
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_1080p/image_1080p_sparse_high_threshold.pgm
+CPU reference time: 142.737 ms
+Speedup vs CPU total: 80.9815x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 2073600
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.588 seconds
+
+
+##########################################################################################
+# Image: image_4k, size=3840x2160
+##########################################################################################
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_cpu.pgm" --mode cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=cpu, low=50, high=100, hysteresis iterations=4
+CPU time: 354.978 ms
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_cpu.pgm
+
+[Command exit code] 0
+[Wall time] 0.510 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_dense.pgm" --mode dense --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=dense, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 1.31054
+  Gaussian     : 0.188438
+  Sobel        : 0.232774
+  NMS          : 0.233949
+  Threshold    : 0.11776
+  Hysteresis   : 0.210842
+  D2H transfer : 1.95214
+  Total        : 4.28475
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_dense.pgm
+CPU reference time: 356.575 ms
+Speedup vs CPU total: 83.2196x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 8294400
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.939 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_opt.pgm" --mode opt --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=opt, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 1.30554
+  Gaussian     : 0.274486
+  Sobel        : 0.239312
+  NMS          : 0.23951
+  Threshold    : 0.117571
+  Hysteresis   : 0.210928
+  D2H transfer : 2.36338
+  Total        : 4.78905
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_opt.pgm
+CPU reference time: 354.999 ms
+Speedup vs CPU total: 74.1273x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 8294400
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.914 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse.pgm" --mode sparse --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=sparse, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 0.841878
+  Gaussian     : 0.270781
+  Sobel        : 0.239018
+  NMS          : 0.239088
+  Threshold    : 0.221011
+  Scan         : 0.324288
+  Scatter      : 0.171811
+  Candidates   : 138161
+  Hysteresis   : 0.107312
+  D2H transfer : 3.26161
+  Total        : 5.71524
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse.pgm
+CPU reference time: 409.543 ms
+Speedup vs CPU total: 71.6581x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 8294400
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 1.074 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse_low_threshold.pgm" --mode sparse --low 20 --high 60 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=sparse, low=20, high=60, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 1.27213
+  Gaussian     : 0.271318
+  Sobel        : 0.23896
+  NMS          : 0.239386
+  Threshold    : 0.221062
+  Scan         : 0.303702
+  Scatter      : 0.173261
+  Candidates   : 149540
+  Hysteresis   : 0.107939
+  D2H transfer : 3.32232
+  Total        : 6.18798
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse_low_threshold.pgm
+CPU reference time: 356.425 ms
+Speedup vs CPU total: 57.5996x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 8294400
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.948 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse_mid_threshold.pgm" --mode sparse --low 50 --high 100 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=sparse, low=50, high=100, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 1.30433
+  Gaussian     : 0.272608
+  Sobel        : 0.238934
+  NMS          : 0.239888
+  Threshold    : 0.221411
+  Scan         : 0.302666
+  Scatter      : 0.169482
+  Candidates   : 138161
+  Hysteresis   : 0.106621
+  D2H transfer : 3.23706
+  Total        : 6.13097
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse_mid_threshold.pgm
+CPU reference time: 363.315 ms
+Speedup vs CPU total: 59.259x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 8294400
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.988 seconds
+
+==========================================================================================
+COMMAND: "/home/compute/w.yuanji/Desktop/cuda_canny_project/canny" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm" "/home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse_high_threshold.pgm" --mode sparse --low 80 --high 160 --compare-cpu --repeat 10
+==========================================================================================
+Loaded /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_images/image_4k_3840x2160.pgm (3840 x 2160)
+Mode=sparse, low=80, high=160, hysteresis iterations=4
+
+Average GPU timings over 10 run(s), milliseconds:
+  H2D transfer : 1.32273
+  Gaussian     : 0.270358
+  Sobel        : 0.23808
+  NMS          : 0.237568
+  Threshold    : 0.221315
+  Scan         : 0.305456
+  Scatter      : 0.167757
+  Candidates   : 131320
+  Hysteresis   : 0.106582
+  D2H transfer : 3.31698
+  Total        : 6.22449
+Wrote /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/image_4k/image_4k_sparse_high_threshold.pgm
+CPU reference time: 358.299 ms
+Speedup vs CPU total: 57.5627x
+
+CPU/GPU correctness comparison:
+  Different pixels : 0 / 8294400
+  Match rate       : 100%
+  Mean abs error   : 0
+
+[Command exit code] 0
+[Wall time] 0.979 seconds
+
+Summary command CSV saved to: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/summary_commands.csv
+
+
+==========================================================================================
+All experiments finished at: Sun Apr 26 17:26:21 2026
+Main log saved to: /home/compute/w.yuanji/Desktop/cuda_canny_project/experiment_results/experiment_log.txt
+==========================================================================================
